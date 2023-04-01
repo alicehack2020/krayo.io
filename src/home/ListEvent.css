@@ -1,0 +1,147 @@
+.list_Main{
+    margin: 20px;
+}
+.headingadd{
+    display: grid;
+    justify-content: center;
+}
+.event_list_Main{
+    display: grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:20px;
+    align-items: center;
+    margin-left: 10px;
+   
+}
+.event_list_Main>div{
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+.banner{
+    width:250px
+}
+
+.list_event_filter_main{
+    display:flex;
+    margin-top: 50px;
+}
+.check_box{
+    display:flex;
+    align-items: center;
+}
+.event_list_find{
+    display:flex;
+    justify-content: right;
+    align-items: center; 
+}
+
+.normalFlexColumn{
+    display: flex;
+    flex-direction: column;
+}
+.event_list_find{
+    margin-right: 30px;
+    
+}
+
+.event_list_find > button{
+     width: 80px;
+     padding: 10px;
+     font-size: medium;
+     border-radius: 5px;
+     background-color: black;
+     color: white;
+     cursor: pointer; 
+     margin-bottom: 10px;
+     
+}
+.check_box input:hover{
+    cursor: pointer;
+}
+
+.event_list_find select{
+padding: 10px;
+border-radius: 5px;
+font-size: medium;
+}
+
+.Date{
+    padding: 10px;
+    border-radius: 5px;
+    font-size: medium;
+    border: 1px solid black;
+}
+
+
+
+.generalFlex{
+    display: flex;
+    justify-content: space-between;
+    margin: 10px;
+    align-items: center;
+}
+
+.CardDiv{
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
+    
+}
+
+.CardDiv p{
+    text-align: start;
+}
+
+.downloadIcon{
+    display: grid;
+    justify-content: right;
+    width: auto;
+    margin: 10px;
+
+}
+
+.downloadIcon img{
+    height: 70px;
+    padding: 5px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+.downloadIcon:hover{
+    cursor: pointer;
+}
+
+.downloadIcon:hover .tooltiptext {
+  visibility: visible;
+}
+
+.tooltiptext {
+  visibility: hidden;
+  background-color: white;
+  color: black;
+  text-align: center;
+  border-radius: 6px;
+ 
+}
+a{
+    text-decoration: none;
+}
+
+ 
+
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+   .event_list_Main{
+    display: grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:20px;
+    align-items: center;
+    margin-left: 50px;
+   }
+}
+
+.uploadSection{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

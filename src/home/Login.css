@@ -1,0 +1,43 @@
+.loginMain{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-top: 50px;
+}
+
+.loginForm{
+    width: 200px;
+    align-items: center;
+    border: 1px solid red;
+    display: flex;
+    justify-content: center;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+}
+
+.gmailButton img{
+    width: 20px;
+    height: 20px;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.gmailButton button{
+    margin: 0px;
+    height: 40px;
+    border: none;
+    background-color: white;
+}
+.loginForm{
+  cursor: pointer;  
+}
+.homeImage{
+    height: 400px;
+}
+
+.headingHome{
+    display: grid;
+    justify-content: center;
+}
+.headingHome p{
+    font-size: x-large;
+}
