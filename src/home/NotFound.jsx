@@ -1,8 +1,12 @@
 import React from 'react'
-
+import notfound from "../img/notfound.svg"
 const NotFound = () => {
   return (
-    <div>NotFound</div>
+
+        <div className='loginMain'>
+           <img src={notfound} alt="" className='homeImage'/>
+        </div>
+    
   )
 }
 

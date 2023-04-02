@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import "./Login.css"
-import gmail from "../img/gmail.png"
-import event from "../img/event.svg"
-import festival from "../img/festival.svg"
-import { GoogleLogin} from 'react-google-login';
+ import home from "../img/home.svg"
+ import { GoogleLogin} from 'react-google-login';
 import axios from 'axios'
 // import { GoogleLogin } from '@react-oauth/google';
 import jwt_decode from "jwt-decode";
@@ -49,7 +47,7 @@ const onLoginFailure = (res) => {
     <>
       <div className='loginMain'>
         <div>
-           <img src={event} alt="" className='homeImage'/>
+           <img src={home} alt="" className='homeImage'/>
         </div>
          
           <GoogleLogin
@@ -62,7 +60,7 @@ const onLoginFailure = (res) => {
         
       </div>
       <div className='headingHome'>
-        <p>Create Your Event For Free Let's Join</p>
+        <p>Upload Your Files For Free Let's Join</p>
       </div>
       
       
