@@ -30,7 +30,7 @@ const [login,setLogin]=useState(false)
           login?<div></div>:<Link to="/" className='nav_link'>Home</Link>
         }
         {
-          login?<div className='navButton'><Link to="/add" className='nav_link'>Add Files</Link>
+          login?<div className='navButton'>
               <Link to="/list" className='nav_link'>All Files</Link></div>:<div></div>
         }    
       </div>
