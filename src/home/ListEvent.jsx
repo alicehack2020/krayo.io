@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useRef, useState } from 'react'
 import "./ListEvent.css"
 import download from "../img/download.png"
+import remove from "../img/trash.png"
 import { useNavigate } from 'react-router-dom'
 import uploadfile from "../img/upload-file.png"
 
@@ -15,7 +16,7 @@ const ListEvent = () => {
   const [upload, setUpload] = useState(0) 
   const navigation = useNavigate()
   const localUserData =JSON.parse(localStorage.getItem('user'))
-   
+  const [loadApiCall, setLoadApiCall]=useState(false)
   
 
  
@@ -34,7 +35,7 @@ const ListEvent = () => {
 
   useEffect(() => {  
     loadData()
-  },[toggleFile])
+  },[toggleFile,loadApiCall])
  
   const downloadFile = (e) => {
     const url = e.url;
@@ -83,7 +84,19 @@ const ListEvent = () => {
     });
   };
 
-console.log(toggleFile)
+  const deleteData = async (e) => {
+    let data = {
+      id:e
+    }
+    try {
+      await axios.post("http://localhost:8000/api/event/remove", data, { headers: { "Authorization": `Bearer ${token}` } }).then((res) => {
+        setLoadApiCall(!loadApiCall) 
+      }).catch((error) => {
+     })
+   } catch (error) {
+    }
+  }
+  
 
   return (
     <div className='list_Main'>
@@ -123,12 +136,16 @@ console.log(toggleFile)
       </div>
  
       <div className='list_event_filter_main'>
-        
+             
             <div className='event_list_Main'>
             {
               data.map((e) => {
                 return <div className='CardDiv'>
+                  <div className='deleteDiv' onClick={()=>deleteData(e._id)}>
+                      <img src={remove} alt="" srcset="" className='deleteIcon' />
+                  </div> 
                   <div className='generalFlex'>
+                 
                     <p>{e.fileName}</p>
                     <a href={e.url} download="file">  
                       <div className='downloadIcon' onClick={(e)=>downloadFile(e)}>   
