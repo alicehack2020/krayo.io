@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import axios from 'axios'
 import React, { useEffect, useRef, useState } from 'react'
 import "./ListEvent.css"
@@ -14,16 +15,14 @@ const ListEvent = () => {
   const inputRef = useRef();
   const token =JSON.parse(localStorage.getItem('token'))
   const [upload, setUpload] = useState(0) 
-  const navigation = useNavigate()
   const localUserData =JSON.parse(localStorage.getItem('user'))
-  const [loadApiCall, setLoadApiCall]=useState(false)
   
 
  
  
   const loadData = async () => {
     try {
-      await axios.post("http://localhost:8000/api/event/list", {},{ headers: {"Authorization" : `Bearer ${token}`} }).then((res) => {
+      await axios.get("http://localhost:8000/api/event/list",{ headers: {"Authorization" : `Bearer ${token}`} }).then((res) => {
         setData(res.data.list)
       }).catch((error) => {
        console.log(error)
@@ -35,12 +34,17 @@ const ListEvent = () => {
 
   useEffect(() => {  
     loadData()
-  },[toggleFile,loadApiCall])
+  },[])
  
-  const downloadFile = (e) => {
-    const url = e.url;
-    console.log(url)
-    window.location.href = url
+  const downloadFile = async(id) => {
+    await axios.get(`http://localhost:8000/api/event/download/${id}`,{ headers: { "Authorization": `Bearer ${token}` } })
+      .then(response => {
+        console.log(response)
+        window.location.href = response.data.downloadUrl
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   useEffect(() => {
@@ -75,28 +79,36 @@ const ListEvent = () => {
     )
       .then((res) => {
         setToggleFile(false) 
-        navigation("/list")
-      console.log(res)
+        setVideoFile(null)
+        setData(res.data.data)
     })
       .catch((error) => {
-        setToggleFile(false) 
+        setToggleFile(false)
+        setVideoFile(null)
       console.log("error", error);
     });
   };
 
   const deleteData = async (e) => {
     let data = {
-      id:e
-    }
+      id: e
+    };
     try {
-      await axios.post("http://localhost:8000/api/event/remove", data, { headers: { "Authorization": `Bearer ${token}` } }).then((res) => {
-        setLoadApiCall(!loadApiCall) 
+      await axios.delete("http://localhost:8000/api/event/remove", {
+        data,
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }).then((res) => {
+        setData(res.data.data)
       }).catch((error) => {
-     })
-   } catch (error) {
+        console.log("error", error);
+      })
+      
+    } catch (error) {
+      console.error(error);
     }
-  }
-  
+  };
 
   return (
     <div className='list_Main'>
@@ -147,14 +159,13 @@ const ListEvent = () => {
                   <div className='generalFlex'>
                  
                     <p>{e.fileName}</p>
-                    <a href={e.url} download="file">  
-                      <div className='downloadIcon' onClick={(e)=>downloadFile(e)}>   
+                     
+                      <div className='downloadIcon' onClick={(data)=>downloadFile(e._id)}>   
                         <img src={download} alt="" srcset="" />
-                          <span class="tooltiptext">Download</span> 
-                      </div>
-                    </a>
+                      <span class="tooltiptext">Download</span> 
+                    </div>
+                      
                   </div>
-                  {/* <p>video</p> */}
                 </div>
               })
           }
