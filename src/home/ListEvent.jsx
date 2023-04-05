@@ -7,8 +7,8 @@ import remove from "../img/trash.png"
 import uploadfile from "../img/upload-file.png"
 // import { createHash, timingSafeEqual } from 'crypto';
 import { AES, enc} from 'crypto-js';
-
-
+// import { Buffer } from 'buffer';
+import Buffer from 'Buffer'
 const ListEvent = () => {
    
   const [data, setData] = useState([])
@@ -17,8 +17,8 @@ const ListEvent = () => {
   const inputRef = useRef();
   const token =JSON.parse(localStorage.getItem('token'))
   const [upload, setUpload] = useState(0) 
-  const localUserData =JSON.parse(localStorage.getItem('user'))
-  
+  const localUserData = JSON.parse(localStorage.getItem('user'))
+   
 
  
  
@@ -41,43 +41,25 @@ const ListEvent = () => {
 
 
  
-  const downloadFile = async(id) => {
-    await axios.get(`http://localhost:8000/api/event/downloads/${id}`,{ headers: { "Authorization": `Bearer ${token}` } })
-      .then(response => {
-        console.log(response)
-        //  const { encrypted,iv,downloadToken,fileName } = response.data;
-         const { file,fileName } = response.data;
-        //  Create a temporary link to initiate the download
-        // const blob = new Blob([encrypted], { type: 'application/octet-stream' });
-        // const url = URL.createObjectURL(blob);
-        // const link = document.createElement('a');
-        // link.href = url;
-        // link.download = fileName;
-        // link.click();
-        // // Cleanup the temporary link and URL object
-        // link.remove();
-        // URL.revokeObjectURL(url); 
-        // Assuming AES encryption with a 256-bit key
-        const key = 'ab23f57c7b1ec14e487e7c269ebdb9d3c3a45eeb10a8b184ec6d76d10c98a4e4';
+  const downloadFile = async (id,file) => {
+     await axios.get(`http://localhost:8000/api/event/downloads/${id}`,{responseType: 'blob',headers: { "Authorization": `Bearer ${token}` } })
+      .then((response) => {
+      
 
-         
-        var bytes = AES.decrypt(file, key);
-        var decryptedData = JSON.parse(bytes.toString(enc.Utf8));
-        const blob = new Blob([decryptedData], { type: 'application/octet-stream' });
-        console.log("decryptedData",decryptedData)
-        // Create a temporary link to initiate the download
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        console.log("url",url)
-        link.href = url;
-        link.download = fileName;
-        link.click();
+      // Create a blob object from the file data
+      const blob = new Blob([response.data], { type: 'application/octet-stream' });
 
-        // Cleanup the temporary link and URL object
-        link.remove();
-        URL.revokeObjectURL(url);
+      // Create a temporary URL for the blob object
+      const url = URL.createObjectURL(blob);
 
-        
+      // Create a temporary link element to trigger the download
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = file;
+      link.click();
+
+      // Revoke the temporary URL and reset the downloading state
+      URL.revokeObjectURL(url);
         
       })
       .catch(error => {
@@ -117,7 +99,7 @@ const ListEvent = () => {
     )
       .then((res) => {
         setToggleFile(false) 
-        setVideoFile(null)
+         setVideoFile(null)
         setData(res.data.data)
     })
       .catch((error) => {
@@ -198,7 +180,7 @@ const ListEvent = () => {
                  
                     <p>{e.fileName}</p>
                      
-                      <div className='downloadIcon' onClick={(data)=>downloadFile(e._id)}>   
+                      <div className='downloadIcon' onClick={(data)=>downloadFile(e._id,e.fileName)}>   
                         <img src={download} alt="" srcset="" />
                       <span class="tooltiptext">Download</span> 
                     </div>
