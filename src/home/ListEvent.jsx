@@ -4,8 +4,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import "./ListEvent.css"
 import download from "../img/download.png"
 import remove from "../img/trash.png"
-import { useNavigate } from 'react-router-dom'
 import uploadfile from "../img/upload-file.png"
+// import { createHash, timingSafeEqual } from 'crypto';
+import { AES, enc} from 'crypto-js';
+
 
 const ListEvent = () => {
    
@@ -34,18 +36,54 @@ const ListEvent = () => {
 
   useEffect(() => {  
     loadData()
-  },[])
+  }, [])
+  
+
+
  
   const downloadFile = async(id) => {
-    await axios.get(`http://localhost:8000/api/event/download/${id}`,{ headers: { "Authorization": `Bearer ${token}` } })
+    await axios.get(`http://localhost:8000/api/event/downloads/${id}`,{ headers: { "Authorization": `Bearer ${token}` } })
       .then(response => {
         console.log(response)
-        window.location.href = response.data.downloadUrl
+        //  const { encrypted,iv,downloadToken,fileName } = response.data;
+         const { file,fileName } = response.data;
+        //  Create a temporary link to initiate the download
+        // const blob = new Blob([encrypted], { type: 'application/octet-stream' });
+        // const url = URL.createObjectURL(blob);
+        // const link = document.createElement('a');
+        // link.href = url;
+        // link.download = fileName;
+        // link.click();
+        // // Cleanup the temporary link and URL object
+        // link.remove();
+        // URL.revokeObjectURL(url); 
+        // Assuming AES encryption with a 256-bit key
+        const key = 'ab23f57c7b1ec14e487e7c269ebdb9d3c3a45eeb10a8b184ec6d76d10c98a4e4';
+
+         
+        var bytes = AES.decrypt(file, key);
+        var decryptedData = JSON.parse(bytes.toString(enc.Utf8));
+        const blob = new Blob([decryptedData], { type: 'application/octet-stream' });
+        console.log("decryptedData",decryptedData)
+        // Create a temporary link to initiate the download
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        console.log("url",url)
+        link.href = url;
+        link.download = fileName;
+        link.click();
+
+        // Cleanup the temporary link and URL object
+        link.remove();
+        URL.revokeObjectURL(url);
+
+        
+        
       })
       .catch(error => {
         console.log(error);
       });
-  }
+   }
 
   useEffect(() => {
     if (videoFile)
