@@ -9,6 +9,8 @@ import uploadfile from "../img/upload-file.png"
 import { AES, enc} from 'crypto-js';
 // import { Buffer } from 'buffer';
 import Buffer from 'Buffer'
+import { Blocks } from 'react-loader-spinner'
+
 const ListEvent = () => {
    
   const [data, setData] = useState([])
@@ -18,7 +20,7 @@ const ListEvent = () => {
   const token =JSON.parse(localStorage.getItem('token'))
   const [upload, setUpload] = useState(0) 
   const localUserData = JSON.parse(localStorage.getItem('user'))
-   
+  const [loader,setLoader]=useState(false) 
 
  
  
@@ -41,11 +43,10 @@ const ListEvent = () => {
 
 
  
-  const downloadFile = async (id,file) => {
+  const downloadFile = async (id, file) => {
+    setLoader(true)
      await axios.get(`http://localhost:8000/api/event/downloads/${id}`,{responseType: 'blob',headers: { "Authorization": `Bearer ${token}` } })
       .then((response) => {
-      
-
       // Create a blob object from the file data
       const blob = new Blob([response.data], { type: 'application/octet-stream' });
 
@@ -60,9 +61,10 @@ const ListEvent = () => {
 
       // Revoke the temporary URL and reset the downloading state
       URL.revokeObjectURL(url);
-        
+      setLoader(false)  
       })
-      .catch(error => {
+       .catch(error => {
+        setLoader(false) 
         console.log(error);
       });
    }
@@ -130,6 +132,8 @@ const ListEvent = () => {
     }
   };
 
+  
+
   return (
     <div className='list_Main'>
       <div className='uploadSection'>
@@ -137,6 +141,14 @@ const ListEvent = () => {
         <p>
           Hi {localUserData?.name} welcome to Krayo.io
         </p>
+        <Blocks
+        visible={loader}
+        height="80"
+        width="80"
+        ariaLabel="blocks-loading"
+        wrapperStyle={{}}
+        wrapperClass="blocks-wrapper"
+        />
         {
           toggleFile ? <>
           <div className="main">
@@ -176,15 +188,13 @@ const ListEvent = () => {
                   <div className='deleteDiv' onClick={()=>deleteData(e._id)}>
                       <img src={remove} alt="" srcset="" className='deleteIcon' />
                   </div> 
-                  <div className='generalFlex'>
-                 
+                  <div className='generalFlex' disabled='true'>
                     <p>{e.fileName}</p>
-                     
-                      <div className='downloadIcon' onClick={(data)=>downloadFile(e._id,e.fileName)}>   
+                    <div className='downloadIcon' onClick={(data)=>downloadFile(e._id,e.fileName)}>   
                         <img src={download} alt="" srcset="" />
                       <span class="tooltiptext">Download</span> 
                     </div>
-                      
+                     
                   </div>
                 </div>
               })
